@@ -6,16 +6,14 @@ public class Checker
 {
     static int Main()
     {
-        BatteryResult batteryResult = new BatteryResult();
-
-        ExpectTrue(batteryResult.Evaluate(25f, 70f, 0.7f));
-        ExpectFalse(batteryResult.Evaluate(50f, 85f, 0.0f));
+        ExpectTrue(BatteryResult.Evaluate(25f, 70f, 0.7f));
+        ExpectFalse(BatteryResult.Evaluate(50f, 85f, 0.0f));
 
         static void ExpectTrue(bool expression)
         {
             if (!expression)
             {
-                Console.WriteLine("Expected true, but got false");
+                BatteryHelper.ShowMessage("Expected true, but got false");
                 Environment.Exit(1);
             }
         }
@@ -24,54 +22,63 @@ public class Checker
         {
             if (expression)
             {
-                Console.WriteLine("Expected false, but got true");
+                BatteryHelper.ShowMessage("Expected false, but got true");
                 Environment.Exit(1);
             }
         }
 
-        Console.WriteLine("All ok");
+        BatteryHelper.ShowMessage("All ok");
         return 0;
     }
 }
 
-public class BatteryHelper
+public static class BatteryHelper
 {
-    public BatteryHelper()
+    public static bool batteryIsOk(float temperature, float soc, float chargeRate)
     {
-
-    }
-    public bool batteryIsOk(float temperature, float soc, float chargeRate)
-    {
-        Console.WriteLine(temperature.ToString());
-        if (temperature < 0 || temperature > 45)
+        if (IsTempOutOfRange(temperature))
         {
-            Console.WriteLine("Temperature is out of range!");
+            ShowMessage("Temperature is out of range!");
             return false;
         }
-        else if (soc < 20 || soc > 80)
+        else if (IsSocOutOfRange(soc))
         {
-            Console.WriteLine("State of Charge is out of range!");
+            ShowMessage("State of Charge is out of range!");
             return false;
         }
-        else if (chargeRate > 0.8)
+        else if (IsChargeRateOutOfRange(chargeRate))
         {
-            Console.WriteLine("Charge Rate is out of range!");
+            ShowMessage("Charge Rate is out of range!");
             return false;
         }
         return true;
     }
-}
 
-public class BatteryResult
-{
-    BatteryHelper helper;
-    public BatteryResult()
+    public static void ShowMessage(string message)
     {
-        helper = new BatteryHelper();
+        Console.WriteLine(message);
     }
 
-    public bool Evaluate(float temperature, float soc, float chargeRate)
+    public static bool IsTempOutOfRange(float temperature)
     {
-        return helper.batteryIsOk(temperature, soc, chargeRate);
+        return (temperature < 0 || temperature > 45) ? true : false;
+    }
+
+    public static bool IsSocOutOfRange(float soc)
+    {
+        return (soc < 20 || soc > 80) ? true : false;
+    }
+
+    public static bool IsChargeRateOutOfRange(float chargeRate)
+    {
+        return (chargeRate > 0.8) ? true : false;
+    }
+}
+
+public static class BatteryResult
+{
+    public static bool Evaluate(float temperature, float soc, float chargeRate)
+    {
+        return BatteryHelper.batteryIsOk(temperature, soc, chargeRate);
     }
 }
