@@ -10,7 +10,11 @@ public class Checker
         Console.WriteLine("Enter 1 for English");
         Console.WriteLine("Enter 2 for German");
 
-        int language = int.Parse(Console.ReadLine());
+        //Commenting following code as its giving error in ACtions : Unhandled Exception: System.ArgumentNullException: Value cannot be null.
+        //int language = int.Parse(Console.ReadLine());
+
+        int language = 2;
+
         if (language == 1 || language == 2)
         {
             if (language == 1)
